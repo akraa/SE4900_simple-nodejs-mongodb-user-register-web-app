@@ -47,6 +47,9 @@ jobs:
         run: npm ci
 
       - name: Build (syntax check)
-        env:
-          DB_URL: mongodb://localhost:27017/test
-        run: npm run prod --dry-run
+        run: |
+          for file in main.js routes/routes.js models/users.js; do
+            if [ -f "$file" ]; then
+              node --check "$file" || exit 1
+            fi
+          done
