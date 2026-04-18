@@ -1,5 +1,15 @@
 # Simple User Register Web-App
 
+## Learning Sprint 4
+
+CI badge for `main` branch: 
+[![CI (main)](https://github.com/akraa/SE4900_simple-nodejs-mongodb-user-register-web-app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/akraa/SE4900_simple-nodejs-mongodb-user-register-web-app/actions/workflows/ci.yml?query=branch%3Amain)
+
+CI badge for `feature/add-validation` branch: 
+[![CI (feature/add-validation)](https://github.com/akraa/SE4900_simple-nodejs-mongodb-user-register-web-app/actions/workflows/ci.yml/badge.svg?branch=feature%2Fadd-validation)](https://github.com/akraa/SE4900_simple-nodejs-mongodb-user-register-web-app/actions/workflows/ci.yml?query=branch%3Afeature%2Fadd-validation)
+
+
+##
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com)
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
