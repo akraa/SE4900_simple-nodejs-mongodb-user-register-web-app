@@ -3,10 +3,9 @@ name: RegisterApp CI Pipeline
 
 # The "on" keyword defines the events that trigger the workflow
 on:
-  # Specifies that this workflow runs on a "pull_request" event
+  # Trigger on pull requests so the AI review runs before merge
   pull_request:
-    # Limits the execution to pull requests being opened or synchronized
-    types: [ opened, synchronize ]
+    types: [ opened, synchronize, reopened, ready_for_review ]
 
 # The "jobs" section groups all the tasks to be executed
 jobs:
@@ -16,14 +15,12 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Google Gemini AI Code Review
-        uses: AleksandrFurmenkovOfficial/ai-code-review@v0.9
+      - name: AI Code Review
+        uses: AleksandrFurmenkovOfficial/ai-code-review@v1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           pr_number: ${{ github.event.number }}
-          ai_provider: 'openai'
-          openai_api_key: ${{ secrets.GOOGLE_API_KEY }}
-          openai_base_url: 'https://generativelanguage.googleapis.com/openai/'
-          openai_model: 'gemini-2.0-flash'
+          ai_provider: google
+          google_api_key: ${{ secrets.GOOGLE_API_KEY }}
