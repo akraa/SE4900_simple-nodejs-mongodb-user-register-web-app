@@ -64,6 +64,7 @@ router.get('/', async (req, res) => {
 // Insert user into database
 router.post('/add', upload, async (req, res) => {
     try {
+        // TODO: Security issue - no input validation
         const user = new User({
             name: req.body.name,
             email: req.body.email,
@@ -116,6 +117,7 @@ router.post('/update/:id', upload, async (req, res) => {
 
             // Delete the old image file if it exists
             if (oldImage) {
+                // FIXME: Potential path traversal vulnerability - no sanitization
                 fs.unlinkSync('./uploads/' + oldImage);
             }
         }
