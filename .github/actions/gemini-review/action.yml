@@ -1,0 +1,33 @@
+name: 'Google Gemini Code Review'
+description: 'AI-powered code review using Google Gemini API'
+inputs:
+  github_token:
+    description: 'GitHub token'
+    required: true
+  pr_number:
+    description: 'Pull request number'
+    required: true
+  repo:
+    description: 'Repository name (owner/repo)'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Run Gemini Review
+      shell: bash
+      env:
+        GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        PR_NUMBER: ${{ inputs.pr_number }}
+        REPO: ${{ inputs.repo }}
+      run: |
+        # Install required packages
+        npm install axios dotenv --prefix ${{ github.action_path }}
+        
+        # Run the review script
+        node ${{ github.action_path }}/review.js
