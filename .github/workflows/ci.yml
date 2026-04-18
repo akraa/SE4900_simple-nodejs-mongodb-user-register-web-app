@@ -47,4 +47,6 @@ jobs:
         run: npm ci
 
       - name: Build (syntax check)
+        env:
+          DB_URL: mongodb://localhost:27017/test
         run: npm run prod --dry-run

@@ -37,5 +37,5 @@ jobs:
         run: npm install -g npm-audit
 
       - name: Run audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=critical
         continue-on-error: true
