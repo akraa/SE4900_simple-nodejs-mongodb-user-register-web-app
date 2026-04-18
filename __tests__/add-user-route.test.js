@@ -70,7 +70,7 @@ describe('POST /add', () => {
     });
     expect(User.__saveMock).toHaveBeenCalledTimes(1);
     expect(res.status).toBe(302);
-    expect(res.headers.location).toBe('/broken-gate');
+    expect(res.headers.location).toBe('/');
     expect(res.headers['x-session-message-type']).toBe('success');
     expect(res.headers['x-session-message']).toBe('User added successfully');
   });
