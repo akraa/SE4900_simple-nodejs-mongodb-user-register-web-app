@@ -9,7 +9,6 @@ COPY package*.json ./
 
 # Install app dependencies
 RUN npm install
-RUN this-command-should-fail
 
 # Bundle app source
 COPY . .
