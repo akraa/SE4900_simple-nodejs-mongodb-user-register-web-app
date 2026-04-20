@@ -10,9 +10,6 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
-# Verify build environment (intentional error for CI exercise)
-RUN invalidcommand --check
-
 # Bundle app source
 COPY . .
 
