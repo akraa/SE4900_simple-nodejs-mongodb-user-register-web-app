@@ -45,7 +45,57 @@ Prompt engineering made a direct difference in test quality and relevance. The m
 - **Execution constraints** (no database dependency; runnable locally with `npm test`)
 
 When prompts were generic, output was generic. When prompts included precise files, behaviors, and acceptance criteria, the generated tests were far more accurate and required less rework.
+---
 
+## Part 4: AI for Build Log Analysis
+
+### What Was Done
+
+A `build-docker` job was added to the CI pipeline (`main.yml`) as a third stage, running after `run-tests` passes. To create a realistic failure scenario, an invalid `RUN invalidcommand --check` instruction was inserted into the `Dockerfile` and pushed on a new branch (`part4/build-log-analysis`), triggering PR #7.
+
+### The Failure Log
+
+The `build-docker` CI step produced the following error:
+
+```
+Step 6/9 : RUN invalidcommand --check
+ ---> Running in a3f91b2c4d11
+/bin/sh: invalidcommand: not found
+The command '/bin/sh -c invalidcommand --check' returned a non-zero code: 127
+Error: Process completed with exit code 1.
+```
+
+### LLM Analysis – Using the Senior DevOps Prompt
+
+The following prompt was applied to the raw log:
+
+> *You are a senior DevOps engineer debugging a failed CI/CD pipeline. The following is a log from a failed CI step in GitHub Actions. Analyze this log, identify the single root cause of the failure, explain it clearly, and provide the exact fix needed.*
+
+**AI-identified root cause:** The `Dockerfile` contained `RUN invalidcommand --check`. Docker executes each `RUN` instruction inside `/bin/sh` on the base image (`node:18-alpine`). Exit code `127` is the POSIX standard for "command not found." Because `invalidcommand` does not exist in the Alpine image, the layer fails and the entire build is aborted.
+
+**AI-recommended fix:** Remove the offending `RUN` line entirely. No other changes are needed.
+
+### Fix Applied
+
+The invalid line and its comment were deleted from the `Dockerfile`:
+
+```diff
+-# Verify build environment (intentional error for CI exercise)
+-RUN invalidcommand --check
+-
+ # Bundle app source
+```
+
+The fix was committed as `"Fix: remove invalid RUN command from Dockerfile"` and pushed to the same branch, re-triggering the pipeline.
+
+### What This Exercise Demonstrated
+
+- **AI log analysis is immediately practical.** Pasting raw CI output with a role-framed prompt produced a precise root cause and exact fix with no ambiguity. There was no hallucination — the exit code, shell, and base image were all correctly interpreted.
+- **The LLM saved diagnostic time.** A developer unfamiliar with Docker exit codes might have investigated the wrong layer or questioned `npm install`. The AI skipped straight to the culpable line.
+- **Prompt framing is load-bearing.** The "senior DevOps engineer" role instruction and the explicit "single root cause" constraint prevented the model from producing a sprawling list of suggestions unrelated to the actual failure.
+- **Limitations remain.** The AI cannot run the pipeline itself, cannot inspect secrets or environment state, and cannot verify that the fix works — that confirmation still requires a real CI run.
+
+---
 ## Is the Developer Becoming an “AI Orchestrator”?
 
 I agree, with nuance. The developer role is increasingly an AI orchestrator **and** quality owner.
